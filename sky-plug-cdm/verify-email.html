@@ -1,0 +1,209 @@
+// ============================================
+// SKY IA - SYSTÈME DE VÉRIFICATION EMAIL
+// Envoi automatique de code par EmailJS
+// ============================================
+
+class EmailVerification {
+    constructor() {
+        // Configuration EmailJS (GRATUIT)
+        this.emailjsServiceID = 'service_skyia';     // À créer sur emailjs.com
+        this.emailjsTemplateID = 'template_verify';   // Template de vérification
+        this.emailjsPublicKey = 'Ny8iC-xCuGodS-HiE'; // Clé publique EmailJS
+        
+        // Code de vérification
+        this.codeLength = 6;
+        this.codeExpiration = 10; // minutes
+        this.currentCode = null;
+        this.currentEmail = null;
+        this.codeTimestamp = null;
+    }
+    
+    // ============================================
+    // GÉNÉRER UN CODE ALÉATOIRE
+    // ============================================
+    generateCode() {
+        const digits = '0123456789';
+        let code = '';
+        for (let i = 0; i < this.codeLength; i++) {
+            code += digits.charAt(Math.floor(Math.random() * digits.length));
+        }
+        return code;
+    }
+    
+    // ============================================
+    // ENVOYER LE CODE PAR EMAIL (VIA EMAILJS)
+    // ============================================
+    async sendVerificationEmail(email) {
+        const code = this.generateCode();
+        
+        // Préparer les données pour l'email
+        const templateParams = {
+            to_email: email,
+            to_name: email.split('@')[0],
+            verification_code: code,
+            app_name: 'SKY IA CDM',
+            expires_in: `${this.codeExpiration} minutes`,
+            natcash_account: '+509 55 64 50 90'
+        };
+        
+        try {
+            // Essayer EmailJS
+            const response = await emailjs.send(
+                this.emailjsServiceID,
+                this.emailjsTemplateID,
+                templateParams,
+                this.emailjsPublicKey
+            );
+            
+            if (response.status === 200) {
+                this.saveCode(email, code);
+                return { success: true, message: 'Code envoyé avec succès !' };
+            }
+        } catch (emailjsError) {
+            console.log('EmailJS non configuré, envoi local...');
+            
+            // FALLBACK : Simuler l'envoi (le code s'affiche dans la console)
+            console.log(`📧═══════════════════════════`);
+            console.log(`  SKY IA - CODE DE VÉRIFICATION`);
+            console.log(`  Email : ${email}`);
+            console.log(`  Code  : ${code}`);
+            console.log(`  Expire dans : ${this.codeExpiration} minutes`);
+            console.log(`═══════════════════════════📧`);
+            
+            this.saveCode(email, code);
+            return { success: true, message: 'Code envoyé (vérifiez la console)' };
+        }
+    }
+    
+    // ============================================
+    // ENVOYER LE CODE PAR WHATSAPP (ALTERNATIVE)
+    // ============================================
+    async sendVerificationWhatsApp(phoneNumber) {
+        const code = this.generateCode();
+        
+        // Message WhatsApp
+        const message = encodeURIComponent(
+            `🧠 *SKY IA CDM - VÉRIFICATION*\n\n` +
+            `Votre code : *${code}*\n\n` +
+            `Ce code expire dans ${this.codeExpiration} minutes.\n\n` +
+            `⚡ Propulsé par Sky Plug CDM\n` +
+            `💰 NatCash : +509 55 64 50 90`
+        );
+        
+        // Ouvrir WhatsApp avec le message
+        window.open(`https://wa.me/${phoneNumber.replace(/\D/g, '')}?text=${message}`, '_blank');
+        
+        this.saveCode(phoneNumber, code);
+        return { success: true, message: 'Code envoyé sur WhatsApp !' };
+    }
+    
+    // ============================================
+    // SAUVEGARDER LE CODE (localStorage)
+    // ============================================
+    saveCode(email, code) {
+        this.currentCode = code;
+        this.currentEmail = email;
+        this.codeTimestamp = Date.now();
+        
+        // Stocker dans localStorage pour persistance
+        const verificationData = {
+            code: code,
+            email: email,
+            timestamp: Date.now(),
+            expiresIn: this.codeExpiration * 60 * 1000 // en millisecondes
+        };
+        
+        localStorage.setItem('skyia_verification', JSON.stringify(verificationData));
+        
+        // Afficher le code dans la console pour le développement
+        console.log(`✅ Code enregistré pour ${email} : ${code}`);
+    }
+    
+    // ============================================
+    // VÉRIFIER LE CODE SAISI
+    // ============================================
+    verifyCode(userCode) {
+        const savedData = JSON.parse(localStorage.getItem('skyia_verification'));
+        
+        if (!savedData) {
+            return { valid: false, message: 'Aucun code trouvé. Renvoyez un code.' };
+        }
+        
+        // Vérifier l'expiration
+        const now = Date.now();
+        const codeAge = now - savedData.timestamp;
+        
+        if (codeAge > this.codeExpiration * 60 * 1000) {
+            localStorage.removeItem('skyia_verification');
+            return { valid: false, message: 'Code expiré. Renvoyez un nouveau code.' };
+        }
+        
+        // Vérifier le code
+        if (userCode === savedData.code) {
+            localStorage.removeItem('skyia_verification');
+            localStorage.setItem('skyia_email_verified', 'true');
+            localStorage.setItem('skyia_verified_email', savedData.email);
+            return { valid: true, message: 'Email vérifié avec succès ! 🎉' };
+        }
+        
+        return { valid: false, message: 'Code incorrect. Réessayez.' };
+    }
+    
+    // ============================================
+    // VÉRIFIER SI L'EMAIL EST DÉJÀ VÉRIFIÉ
+    // ============================================
+    isEmailVerified() {
+        return localStorage.getItem('skyia_email_verified') === 'true';
+    }
+    
+    // ============================================
+    // RENVOYER LE CODE
+    // ============================================
+    async resendCode() {
+        const savedData = JSON.parse(localStorage.getItem('skyia_verification'));
+        
+        if (savedData && savedData.email) {
+            return await this.sendVerificationEmail(savedData.email);
+        }
+        
+        return { success: false, message: 'Veuillez d\'abord entrer votre email.' };
+    }
+    
+    // ============================================
+    // TEMPS RESTANT AVANT EXPIRATION
+    // ============================================
+    getTimeRemaining() {
+        const savedData = JSON.parse(localStorage.getItem('skyia_verification'));
+        
+        if (!savedData) return 0;
+        
+        const now = Date.now();
+        const elapsed = now - savedData.timestamp;
+        const total = this.codeExpiration * 60 * 1000;
+        const remaining = Math.max(0, total - elapsed);
+        
+        return Math.floor(remaining / 1000); // secondes restantes
+    }
+    
+    // ============================================
+    // NETTOYER LES CODES EXPIRÉS
+    // ============================================
+    cleanupExpiredCodes() {
+        const savedData = JSON.parse(localStorage.getItem('skyia_verification'));
+        
+        if (savedData) {
+            const now = Date.now();
+            const age = now - savedData.timestamp;
+            
+            if (age > this.codeExpiration * 60 * 1000) {
+                localStorage.removeItem('skyia_verification');
+            }
+        }
+    }
+}
+
+// Instance globale
+const emailVerification = new EmailVerifier();
+
+// Nettoyer les codes expirés au chargement
+emailVerification.cleanupExpiredCodes();
