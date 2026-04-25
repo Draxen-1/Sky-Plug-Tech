@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKY IA CDM | Connexion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --matrix-green: #00ff00;
+            --neon-green: #39ff14;
+            --bg-dark: #0a0a0a;
+            --bg-card: rgba(0, 20, 0, 0.8);
+            --border-color: #00ff00;
+            --gold: #ffaa00;
+            --red: #ff4444;
+            --whatsapp: #25D366;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--matrix-green);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        
+        #matrixCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.3;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2;
+        }
+        
+        .login-wrapper {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 480px;
+            padding: 1.5rem;
+        }
+        
+        .login-container {
+            background: linear-gradient(135deg, #000, #001a00, #000);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.2), inset 0 0 40px rgba(0, 255, 0, 0.02);
+            animation: containerGlow 3s infinite;
+        }
+        
+        @keyframes containerGlow {
+            0%, 100% { box-shadow: 0 0 40px rgba(0, 255, 0, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(0, 255, 0, 0.4); }
+        }
+        
+        /* Logo */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .sky-ia-emblem {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1rem;
+        }
+        
+        .emblem-circle {
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, #000, #001a00);
+            border: 2px solid var(--matrix-green);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.5);
+            animation: emblemPulse 2s infinite;
+        }
+        
+        @keyframes emblemPulse {
+            0%, 100% { box-shadow: 0 0 25px rgba(0, 255, 0, 0.5); }
+            50% { box-shadow: 0 0 45px rgba(0, 255, 0, 0.9); }
+        }
+        
+        .emblem-text {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--matrix-green);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .emblem-sub {
+            font-size: 1.2rem;
+            color: var(--gold);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+        }
+        
+        .emblem-wings {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            top: 50%; left: -5px; right: -5px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        
+        .wing {
+            font-size: 1.5rem;
+            animation: wingPulse 1s infinite alternate;
+        }
+        
+        @keyframes wingPulse {
+            from { opacity: 0.3; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .glitch-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--matrix-green);
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .glitch-title::before,
+        .glitch-title::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        
+        .glitch-title::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff0000;
+            animation: glitch1 2s infinite linear alternate-reverse;
+            clip: rect(0, 900px, 0, 0);
+        }
+        
+        .glitch-title::after {
+            left: -2px;
+            text-shadow: -2px 0 #0000ff;
+            animation: glitch2 3s infinite linear alternate-reverse;
+            clip: rect(0, 900px, 0, 0);
+        }
+        
+        @keyframes glitch1 {
+            0%, 80%, 100% { clip: rect(0, 900px, 0, 0); }
+            20% { clip: rect(15px, 900px, 25px, 0); }
+            40% { clip: rect(5px, 900px, 15px, 0); }
+            60% { clip: rect(30px, 900px, 10px, 0); }
+        }
+        
+        @keyframes glitch2 {
+            0%, 80%, 100% { clip: rect(0, 900px, 0, 0); }
+            20% { clip: rect(5px, 900px, 30px, 0); }
+            40% { clip: rect(20px, 900px, 10px, 0); }
+            60% { clip: rect(10px, 900px, 35px, 0); }
+        }
+        
+        /* Messages */
+        .message-box {
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+            font-size: 0.85rem;
+            animation: slideDown 0.3s;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-box.success { background: rgba(0,255,0,0.1); border: 1px solid #00ff00; color: #00ff00; display: block; }
+        .message-box.error { background: rgba(255,0,0,0.1); border: 1px solid #ff4444; color: #ff4444; display: block; }
+        .message-box.info { background: rgba(255,170,0,0.1); border: 1px solid #ffaa00; color: #ffaa00; display: block; }
+        
+        /* ============================================ */
+        /* WHATSAPP OBLIGATOIRE - SECTION */
+        /* ============================================ */
+        .whatsapp-mandatory {
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.1));
+            border: 2px solid var(--whatsapp);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            animation: whatsappGlow 2s infinite;
+        }
+        
+        @keyframes whatsappGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(37, 211, 102, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(37, 211, 102, 0.5); }
+        }
+        
+        .whatsapp-mandatory h3 {
+            color: #ff4444;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .whatsapp-mandatory p {
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .whatsapp-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.9rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        .btn-whatsapp.channel {
+            background: #25D366;
+        }
+        
+        .btn-whatsapp.group {
+            background: #128C7E;
+        }
+        
+        .btn-whatsapp:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.5);
+        }
+        
+        .btn-whatsapp i {
+            font-size: 1.2rem;
+        }
+        
+        .whatsapp-checkboxes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            text-align: left;
+        }
+        
+        .whatsapp-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        
+        .whatsapp-checkbox input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--whatsapp);
+            cursor: pointer;
+        }
+        
+        .whatsapp-checkbox.checked {
+            color: #25D366;
+        }
+        
+        .whatsapp-checkbox.checked::after {
+            content: ' ✓';
+            color: #25D366;
+            font-weight: bold;
+        }
+        
+        /* Séparateur */
+        .whatsapp-separator {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #555;
+            font-size: 0.8rem;
+        }
+        
+        .whatsapp-separator::before,
+        .whatsapp-separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(0, 255, 0, 0.2);
+        }
+        
+        .whatsapp-separator span {
+            padding: 0 1rem;
+        }
+        
+        /* Formulaire login (caché tant que WhatsApp non vérifié) */
+        .login-form-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .login-form-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+        }
+        
+        .form-group label i {
+            margin-right: 0.4rem;
+            color: var(--gold);
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: var(--matrix-green);
+            border-radius: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .input-wrapper input:focus {
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--matrix-green);
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .toggle-password:hover {
+            opacity: 1;
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+        
+        .remember-me input {
+            accent-color: var(--matrix-green);
+        }
+        
+        .forgot-password {
+            color: var(--gold);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .forgot-password:hover {
+            text-shadow: 0 0 10px var(--gold);
+        }
+        
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #00cc00, #00ff00);
+            color: #000;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.4);
+        }
+        
+        .btn-demo {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            margin-top: 0.8rem;
+        }
+        
+        .btn-demo:hover {
+            background: rgba(255, 170, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.3);
+        }
+        
+        .spinner-container {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .spinner-container.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 35px;
+            height: 35px;
+            border: 3px solid rgba(0, 255, 0, 0.2);
+            border-top-color: var(--matrix-green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 0.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 1rem 0;
+            color: #555;
+            font-size: 0.8rem;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 35%;
+            height: 1px;
+            background: rgba(0, 255, 0, 0.2);
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .login-footer a {
+            color: var(--matrix-green);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .login-footer a:hover {
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+        
+        .natcash-banner {
+            background: linear-gradient(135deg, rgba(255,170,0,0.1), rgba(255,170,0,0.05));
+            border: 1px solid rgba(255,170,0,0.3);
+            border-radius: 10px;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        .natcash-banner strong {
+            color: var(--gold);
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem 1rem;
+            }
+            .glitch-title {
+                font-size: 1.4rem;
+            }
+            .form-options {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="overlay"></div>
+    
+    <div class="login-wrapper">
+        <div class="login-container">
+            <!-- Logo -->
+            <div class="logo-section">
+                <div class="sky-ia-emblem">
+                    <div class="emblem-circle">
+                        <span class="emblem-text">SKY</span>
+                        <span class="emblem-sub">IA</span>
+                    </div>
+                    <div class="emblem-wings">
+                        <span class="wing left">⚡</span>
+                        <span class="wing right">⚡</span>
+                    </div>
+                </div>
+                <h1 class="glitch-title" data-text="SKY IA CDM">SKY IA CDM</h1>
+                <p style="color: #aaa; font-size: 0.85rem; margin-top: 0.3rem;">🌑 Portail de Connexion Mystique 🌑</p>
+            </div>
+            
+            <!-- Messages -->
+            <div id="messageBox" class="message-box"></div>
+            
+            <!-- ============================================ -->
+            <!-- WHATSAPP OBLIGATOIRE -->
+            <!-- ============================================ -->
+            <div class="whatsapp-mandatory" id="whatsappSection">
+                <h3>⚠️ REJOIGNEZ LA COMMUNAUTÉ SKY IA ⚠️</h3>
+                <p>La chaîne et le groupe WhatsApp sont <strong style="color:#ff4444;">OBLIGATOIRES</strong> pour accéder à Sky IA</p>
+                
+                <div class="whatsapp-buttons">
+                    <a href="https://whatsapp.com/channel/0029VbCArXO2phHPux5T8D3K" 
+                       target="_blank" 
+                       class="btn-whatsapp channel"
+                       id="btnChannel">
+                        <i class="fab fa-whatsapp"></i> 📢 REJOINDRE LA CHAÎNE SKY IA
+                    </a>
+                    
+                    <a href="https://chat.whatsapp.com/DwnzbJJ352Z0VmbFiffNw6" 
+                       target="_blank" 
+                       class="btn-whatsapp group"
+                       id="btnGroup">
+                        <i class="fab fa-whatsapp"></i> 💬 REJOINDRE LE GROUPE CDM
+                    </a>
+                </div>
+                
+                <div class="whatsapp-checkboxes">
+                    <label class="whatsapp-checkbox" id="labelChannel">
+                        <input type="checkbox" id="checkChannel" onchange="checkWhatsAppValidation()">
+                        J'ai rejoint la chaîne Sky IA
+                    </label>
+                    <label class="whatsapp-checkbox" id="labelGroup">
+                        <input type="checkbox" id="checkGroup" onchange="checkWhatsAppValidation()">
+                        J'ai rejoint le groupe CDM
+                    </label>
+                </div>
+                
+                <button class="btn btn-primary" id="btnValidateWhatsApp" onclick="validateWhatsApp()" disabled>
+                    <i class="fas fa-check-circle"></i> J'AI REJOINT - ACCÉDER À SKY IA
+                </button>
+                
+                <p style="color: #ff4444; font-size: 0.7rem; margin-top: 0.8rem;">
+                    ⚠️ Vous devez rejoindre les DEUX pour continuer
+                </p>
+            </div>
+            
+            <!-- Séparateur -->
+            <div class="whatsapp-separator" id="separatorWhatsApp" style="display: none;">
+                <span>🔓 ACCÈS DÉBLOQUÉ</span>
+            </div>
+            
+            <!-- ============================================ -->
+            <!-- FORMULAIRE DE CONNEXION -->
+            <!-- ============================================ -->
+            <div class="login-form-section" id="loginFormSection">
+                <form id="loginForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email ou Pseudo CDM</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="loginEmail" placeholder="votre@email.com" autocomplete="email">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Mot de passe</label>
+                        <div class="input-wrapper password-wrapper">
+                            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            Se souvenir de moi
+                        </label>
+                        <a href="verify-email.html?mode=reset" class="forgot-password">
+                            Mot de passe oublié ?
+                        </a>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" onclick="handleLogin()">
+                        <i class="fas fa-power-off"></i> ACCÉDER À SKY IA
+                    </button>
+                    
+                    <div class="spinner-container" id="loginSpinner">
+                        <div class="spinner"></div>
+                        <p>Connexion en cours...</p>
+                    </div>
+                    
+                    <div class="divider">OU</div>
+                    
+                    <button type="button" class="btn btn-demo" onclick="demoLogin()">
+                        <i class="fas fa-bolt"></i> DÉMO RAPIDE (SKY IA)
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>Pas encore de compte ? <a href="register.html">Inscrivez-vous</a></p>
+            </div>
+            
+            <!-- NatCash -->
+            <div class="natcash-banner">
+                <p>💰 Soutenez <strong>Sky IA</strong> : <strong>+509 55 64 50 90</strong> (NatCash)</p>
+            </div>
+        </div>
+        
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.75rem; color: #555;">
+            ⚡ Sky IA v3.0 | Propulsé par Sky Plug CDM | 💀 Famille CDM
+        </p>
+    </div>
+    
+    <!-- SCRIPTS -->
+    <script>
+        // Matrix Effect
+        const canvas = document.getElementById('matrixCanvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/';
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#00ff00';
+                ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }
+            setInterval(draw, 50);
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+        
+        // ============================================
+        // VÉRIFICATION WHATSAPP OBLIGATOIRE
+        // ============================================
+        let whatsappValidated = false;
+        
+        function checkWhatsAppValidation() {
+            const checkChannel = document.getElementById('checkChannel').checked;
+            const checkGroup = document.getElementById('checkGroup').checked;
+            const btnValidate = document.getElementById('btnValidateWhatsApp');
+            
+            // Mettre à jour les labels
+            const labelChannel = document.getElementById('labelChannel');
+            const labelGroup = document.getElementById('labelGroup');
+            
+            if (checkChannel) labelChannel.classList.add('checked');
+            else labelChannel.classList.remove('checked');
+            
+            if (checkGroup) labelGroup.classList.add('checked');
+            else labelGroup.classList.remove('checked');
+            
+            // Activer le bouton si les deux sont cochés
+            btnValidate.disabled = !(checkChannel && checkGroup);
+            
+            if (checkChannel && checkGroup) {
+                btnValidate.style.background = 'linear-gradient(45deg, #25D366, #128C7E)';
+                btnValidate.style.color = 'white';
+            } else {
+                btnValidate.style.background = '';
+                btnValidate.style.color = '';
+            }
+        }
+        
+        function validateWhatsApp() {
+            const checkChannel = document.getElementById('checkChannel').checked;
+            const checkGroup = document.getElementById('checkGroup').checked;
+            
+            if (!checkChannel || !checkGroup) {
+                showMessage('⚠️ Vous devez rejoindre la chaîne ET le groupe WhatsApp !', 'error');
+                return;
+            }
+            
+            // Sauvegarder la validation
+            whatsappValidated = true;
+            localStorage.setItem('skyia_whatsapp_validated', 'true');
+            localStorage.setItem('skyia_whatsapp_validated_date', new Date().toISOString());
+            
+            // Masquer la section WhatsApp
+            document.getElementById('whatsappSection').style.display = 'none';
+            
+            // Afficher le séparateur
+            document.getElementById('separatorWhatsApp').style.display = 'flex';
+            
+            // Afficher le formulaire de connexion
+            document.getElementById('loginFormSection').classList.add('active');
+            
+            showMessage('✅ Communauté rejointe avec succès ! Vous pouvez maintenant vous connecter.', 'success');
+            
+            // Effet de succès
+            setTimeout(() => {
+                document.getElementById('loginEmail').focus();
+            }, 500);
+        }
+        
+        // Vérifier si déjà validé
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('skyia_whatsapp_validated') === 'true') {
+                document.getElementById('whatsappSection').style.display = 'none';
+                document.getElementById('separatorWhatsApp').style.display = 'flex';
+                document.getElementById('loginFormSection').classList.add('active');
+                whatsappValidated = true;
+            }
+            
+            // Vérifier si l'email est vérifié
+            const verifiedEmail = localStorage.getItem('skyia_verified_email');
+            if (verifiedEmail) {
+                document.getElementById('loginEmail').value = verifiedEmail;
+            }
+        });
+        
+        // ============================================
+        // MESSAGES
+        // ============================================
+        function showMessage(text, type = 'info') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.className = 'message-box ' + type;
+            messageBox.innerHTML = text;
+            messageBox.style.display = 'block';
+            
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 5000);
+        }
+        
+        // ============================================
+        // LOGIN
+        // ============================================
+        function handleLogin() {
+            // Vérifier WhatsApp
+            if (!whatsappValidated && localStorage.getItem('skyia_whatsapp_validated') !== 'true') {
+                showMessage('⚠️ Veuillez d\'abord rejoindre la communauté WhatsApp !', 'error');
+                document.getElementById('whatsappSection').style.display = 'block';
+                document.getElementById('loginFormSection').classList.remove('active');
+                return;
+            }
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email) {
+                showMessage('❌ Veuillez entrer votre email ou pseudo.', 'error');
+                return;
+            }
+            
+            if (!password) {
+                showMessage('❌ Veuillez entrer votre mot de passe.', 'error');
+                return;
+            }
+            
+            // Afficher spinner
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('loginSpinner').classList.add('active');
+            
+            // Simuler connexion
+            setTimeout(() => {
+                // Récupérer les utilisateurs enregistrés
+                const users = JSON.parse(localStorage.getItem('skyia_users') || '[]');
+                
+                const user = users.find(u => 
+                    (u.email === email || u.username === email) && 
+                    u.password === btoa(password)
+                );
+                
+                if (user || email === 'demo') {
+                    // Connexion réussie
+                    const sessionUser = user || {
+                        email: 'demo@skyia.cdm',
+                        username: 'DEMO_CDM',
+                        firstName: 'Sky',
+                        lastName: 'User'
+                    };
+                    
+                    // Sauvegarder la session
+                    const sessionData = {
+                        ...sessionUser,
+                        loginTime: new Date().toISOString(),
+                        token: 'sky_' + Math.random().toString(36).substring(2)
+                    };
+                    
+                    localStorage.setItem('skyia_session', JSON.stringify(sessionData));
+                    localStorage.setItem('skyia_auth', 'true');
+                    
+                    if (document.getElementById('rememberMe').checked) {
+                        localStorage.setItem('skyia_remember', email);
+                    }
+                    
+                    showMessage('✅ Connexion réussie ! Redirection...', 'success');
+                    
+                    // Rediriger vers le dashboard
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                    
+                } else {
+                    document.getElementById('loginForm').style.display = 'block';
+                    document.getElementById('loginSpinner').classList.remove('active');
+                    showMessage('❌ Email ou mot de passe incorrect.', 'error');
+                }
+            }, 1500);
+        }
+        
+        function demoLogin() {
+            if (!whatsappValidated && localStorage.getItem('skyia_whatsapp_validated') !== 'true') {
+                showMessage('⚠️ Rejoignez d\'abord la communauté WhatsApp !', 'error');
+                return;
+            }
+            
+            document.getElementById('loginEmail').value = 'demo@skyia.cdm';
+            document.getElementById('loginPassword').value = 'demo123';
+            handleLogin();
+        }
+        
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+        
+        // Entrée pour soumettre
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && document.getElementById('loginFormSection').classList.contains('active')) {
+                handleLogin();
+            }
+        });
+    </script>
+</body>
+</html>
